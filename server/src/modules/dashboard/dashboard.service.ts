@@ -39,7 +39,6 @@ class DashboardService {
             orderBy: { createdAt: 'asc' },
         });
 
-        // Group by date
         const groupedByDay = new Map<string, number>();
         tasks.forEach((task) => {
             const dateKey = task.createdAt.toISOString().split('T')[0];
@@ -72,7 +71,6 @@ class DashboardService {
             orderBy: { completedAt: 'asc' },
         });
 
-        // Group by date
         const groupedByDay = new Map<string, number>();
         tasks.forEach((task) => {
             if (task.completedAt) {
@@ -97,21 +95,6 @@ class DashboardService {
         return [
             { status: 'PENDING', count: pending },
             { status: 'COMPLETED', count: completed },
-        ];
-    }
-
-    //Priority Breakdown (for pie/donut chart)
-    static async getPriorityBreakdown(userId: number) {
-        const [low, medium, high] = await Promise.all([
-            prisma.task.count({ where: { userId, priority: 'LOW' } }),
-            prisma.task.count({ where: { userId, priority: 'MEDIUM' } }),
-            prisma.task.count({ where: { userId, priority: 'HIGH' } }),
-        ]);
-
-        return [
-            { priority: 'LOW', count: low },
-            { priority: 'MEDIUM', count: medium },
-            { priority: 'HIGH', count: high },
         ];
     }
 

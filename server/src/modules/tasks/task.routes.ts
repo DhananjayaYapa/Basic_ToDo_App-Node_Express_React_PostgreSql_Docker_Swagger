@@ -26,11 +26,6 @@ router.use(authenticate);
  *           type: string
  *           enum: [PENDING, COMPLETED]
  *       - in: query
- *         name: priority
- *         schema:
- *           type: string
- *           enum: [LOW, MEDIUM, HIGH]
- *       - in: query
  *         name: startDate
  *         schema:
  *           type: string
@@ -68,11 +63,6 @@ router.get(
  *         schema:
  *           type: string
  *           enum: [PENDING, COMPLETED]
- *       - in: query
- *         name: priority
- *         schema:
- *           type: string
- *           enum: [LOW, MEDIUM, HIGH]
  *       - in: query
  *         name: startDate
  *         schema:
@@ -131,14 +121,6 @@ router.get('/recent', asyncHandler(TaskController.getRecent));
  *               description:
  *                 type: string
  *                 example: Milk, bread, eggs, and vegetables
- *               priority:
- *                 type: string
- *                 enum: [LOW, MEDIUM, HIGH]
- *                 default: MEDIUM
- *               dueDate:
- *                 type: string
- *                 format: date
- *                 example: "2026-03-20"
  *     responses:
  *       201:
  *         description: Task created successfully
@@ -166,11 +148,6 @@ router.post(
  *           type: string
  *           enum: [PENDING, COMPLETED]
  *       - in: query
- *         name: priority
- *         schema:
- *           type: string
- *           enum: [LOW, MEDIUM, HIGH]
- *       - in: query
  *         name: startDate
  *         schema:
  *           type: string
@@ -184,7 +161,7 @@ router.post(
  *         name: sortBy
  *         schema:
  *           type: string
- *           enum: [createdAt, dueDate, priority, title]
+ *           enum: [createdAt, title]
  *           default: createdAt
  *       - in: query
  *         name: sortOrder
@@ -260,12 +237,6 @@ router.get('/:id', asyncHandler(TaskController.getById));
  *                 type: string
  *               description:
  *                 type: string
- *               priority:
- *                 type: string
- *                 enum: [LOW, MEDIUM, HIGH]
- *               dueDate:
- *                 type: string
- *                 format: date
  *     responses:
  *       200:
  *         description: Task updated successfully

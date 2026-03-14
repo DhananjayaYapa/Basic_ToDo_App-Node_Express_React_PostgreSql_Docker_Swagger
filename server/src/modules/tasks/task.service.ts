@@ -2,7 +2,7 @@ import prisma from '../../config/db.js';
 import { NotFoundError } from '../../middleware/errorHandler.js';
 import { TASK_DEFAULTS } from '../../shared/constants/index.js';
 import type { CreateTaskInput, UpdateTaskInput, TaskQueryInput } from './task.schema.js';
-import type { Priority, TaskStatus } from '../../generated/prisma/client.js';
+import type { TaskStatus } from '../../generated/prisma/client.js';
 
 //Task Service
 class TaskService {
@@ -12,8 +12,6 @@ class TaskService {
             data: {
                 title: data.title,
                 description: data.description || null,
-                priority: data.priority as Priority,
-                dueDate: data.dueDate ? new Date(data.dueDate) : null,
                 userId,
             },
         });
@@ -33,13 +31,11 @@ class TaskService {
 
     //Get All (with filters + pagination)
     static async getAll(userId: number, query: TaskQueryInput) {
-        const { status, priority, startDate, endDate, sortBy, sortOrder, page, limit } = query;
+        const { status, startDate, endDate, sortBy, sortOrder, page, limit } = query;
 
-        // Build where clause dynamically
         const where: Record<string, unknown> = { userId };
 
         if (status) where.status = status;
-        if (priority) where.priority = priority;
 
         if (startDate || endDate) {
             const dateFilter: Record<string, Date> = {};
@@ -99,10 +95,6 @@ class TaskService {
             data: {
                 ...(data.title !== undefined && { title: data.title }),
                 ...(data.description !== undefined && { description: data.description }),
-                ...(data.priority !== undefined && { priority: data.priority as Priority }),
-                ...(data.dueDate !== undefined && {
-                    dueDate: data.dueDate ? new Date(data.dueDate) : null,
-                }),
             },
         });
     }
@@ -145,12 +137,11 @@ class TaskService {
 
     //Get For Export (no pagination — returns all matching)
     static async getForExport(userId: number, query: TaskQueryInput) {
-        const { status, priority, startDate, endDate, sortBy, sortOrder } = query;
+        const { status, startDate, endDate, sortBy, sortOrder } = query;
 
         const where: Record<string, unknown> = { userId };
 
         if (status) where.status = status;
-        if (priority) where.priority = priority;
 
         if (startDate || endDate) {
             const dateFilter: Record<string, Date> = {};
@@ -164,14 +155,11 @@ class TaskService {
             orderBy: { [sortBy]: sortOrder },
         });
 
-        // Flatten for export
         return tasks.map((t) => ({
             id: t.id,
             title: t.title,
             description: t.description,
             status: t.status,
-            priority: t.priority,
-            dueDate: t.dueDate ? t.dueDate.toISOString().split('T')[0] : null,
             completedAt: t.completedAt ? t.completedAt.toISOString() : null,
             createdAt: t.createdAt.toISOString(),
         }));
