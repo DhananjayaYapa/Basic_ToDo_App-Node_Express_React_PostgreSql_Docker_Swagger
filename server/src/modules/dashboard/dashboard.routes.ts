@@ -107,18 +107,4 @@ router.get(
  */
 router.get('/status-breakdown', asyncHandler(DashboardController.getStatusBreakdown));
 
-/**
- * @swagger
- * /api/v1/dashboard/priority-breakdown:
- *   get:
- *     summary: Get LOW/MEDIUM/HIGH counts (for pie chart)
- *     tags: [Dashboard]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Priority breakdown data
- */
-router.get('/priority-breakdown', asyncHandler(DashboardController.getPriorityBreakdown));
-
 export default router;

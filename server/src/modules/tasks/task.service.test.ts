@@ -27,12 +27,11 @@ describe('TaskService', () => {
     });
 
     describe('create', () => {
-        it('should create a task with correct data', async () => {
+        it('should create a task with title and description', async () => {
             const mockTask = {
                 id: 1,
                 title: 'Test task',
                 description: 'A description',
-                priority: 'MEDIUM',
                 status: 'PENDING',
                 userId: 1,
                 createdAt: new Date(),
@@ -42,7 +41,6 @@ describe('TaskService', () => {
             const result = await TaskService.create(1, {
                 title: 'Test task',
                 description: 'A description',
-                priority: 'MEDIUM',
             });
 
             expect(result).toEqual(mockTask);
@@ -50,26 +48,22 @@ describe('TaskService', () => {
                 data: {
                     title: 'Test task',
                     description: 'A description',
-                    priority: 'MEDIUM',
-                    dueDate: null,
                     userId: 1,
                 },
             });
         });
 
-        it('should handle dueDate when provided', async () => {
+        it('should create a task with only title', async () => {
             mockPrisma.task.create.mockResolvedValue({ id: 1 });
 
-            await TaskService.create(1, {
-                title: 'Test',
-                priority: 'HIGH',
-                dueDate: '2026-04-01',
-            });
+            await TaskService.create(1, { title: 'Test' });
 
             expect(mockPrisma.task.create).toHaveBeenCalledWith({
-                data: expect.objectContaining({
-                    dueDate: new Date('2026-04-01'),
-                }),
+                data: {
+                    title: 'Test',
+                    description: null,
+                    userId: 1,
+                },
             });
         });
     });
@@ -215,8 +209,6 @@ describe('TaskService', () => {
                     title: 'Task 1',
                     description: 'Desc',
                     status: 'COMPLETED',
-                    priority: 'HIGH',
-                    dueDate: new Date('2026-04-01'),
                     completedAt: new Date('2026-03-15'),
                     createdAt: new Date('2026-03-01'),
                 },
@@ -231,7 +223,6 @@ describe('TaskService', () => {
             });
 
             expect(result[0]).toHaveProperty('id', 1);
-            expect(result[0]).toHaveProperty('dueDate', '2026-04-01');
             expect(typeof result[0].completedAt).toBe('string');
             expect(typeof result[0].createdAt).toBe('string');
         });

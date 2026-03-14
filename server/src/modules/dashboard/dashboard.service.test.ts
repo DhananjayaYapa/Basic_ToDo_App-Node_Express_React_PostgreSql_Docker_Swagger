@@ -98,21 +98,4 @@ describe('DashboardService', () => {
             ]);
         });
     });
-
-    describe('getPriorityBreakdown', () => {
-        it('should return LOW, MEDIUM, HIGH counts', async () => {
-            mockPrisma.task.count
-                .mockResolvedValueOnce(3)
-                .mockResolvedValueOnce(5)
-                .mockResolvedValueOnce(2);
-
-            const result = await DashboardService.getPriorityBreakdown(1);
-
-            expect(result).toEqual([
-                { priority: 'LOW', count: 3 },
-                { priority: 'MEDIUM', count: 5 },
-                { priority: 'HIGH', count: 2 },
-            ]);
-        });
-    });
 });

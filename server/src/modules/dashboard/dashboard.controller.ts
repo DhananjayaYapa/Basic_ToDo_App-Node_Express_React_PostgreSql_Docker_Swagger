@@ -39,15 +39,6 @@ class DashboardController {
             next(error);
         }
     }
-
-    static async getPriorityBreakdown(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const data = await DashboardService.getPriorityBreakdown(req.user!.userId);
-            successResponse(res, data, 'Priority breakdown retrieved successfully');
-        } catch (error) {
-            next(error);
-        }
-    }
 }
 
 export default DashboardController;
