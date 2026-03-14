@@ -1,25 +1,16 @@
 import express from 'express';
+import authRoutes from '../modules/auth/auth.routes.js';
+import taskRoutes from '../modules/tasks/task.routes.js';
+import dashboardRoutes from '../modules/dashboard/dashboard.routes.js';
 
 const router = express.Router();
 
-// ─── Mount Module Routes ────────────────────────────────────────────────────
-// Module routes will be added here as modules are implemented:
-// router.use('/auth', authRoutes);
-// router.use('/tasks', taskRoutes);
-// router.use('/dashboard', dashboardRoutes);
+//Mount Module Routes
+router.use('/auth', authRoutes);
+router.use('/tasks', taskRoutes);
+router.use('/dashboard', dashboardRoutes);
 
-// ─── Health Check ───────────────────────────────────────────────────────────
-
-/**
- * @swagger
- * /api/v1/health:
- *   get:
- *     summary: Health check endpoint
- *     tags: [System]
- *     responses:
- *       200:
- *         description: API is running
- */
+//Health Check
 router.get('/health', (_req, res) => {
     res.json({
         status: 'OK',
