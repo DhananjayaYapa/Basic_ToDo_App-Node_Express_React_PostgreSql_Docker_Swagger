@@ -3,11 +3,10 @@ import prisma from '../../config/db.js';
 import { generateToken } from '../../middleware/auth.js';
 import { SALT_ROUNDS } from '../../shared/constants/index.js';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../../middleware/errorHandler.js';
-import type { RegisterInput, LoginInput, UpdateProfileInput } from './auth.schema.js';
+import type { RegisterInput, LoginInput, UpdateProfileInput, ChangePasswordInput } from './auth.schema.js';
 
 //Auth Service
 class AuthService {
-
     //Register
     static async register(data: RegisterInput) {
         const existingUser = await prisma.user.findUnique({
@@ -118,6 +117,36 @@ class AuthService {
         });
 
         return user;
+    }
+
+    //Change Password
+    static async changePassword(userId: number, data: ChangePasswordInput) {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                passwordHash: true,
+            },
+        });
+
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+
+        const isCurrentPasswordValid = await bcrypt.compare(data.currentPassword, user.passwordHash);
+
+        if (!isCurrentPasswordValid) {
+            throw new UnauthorizedError('Current password is incorrect');
+        }
+
+        const newPasswordHash = await bcrypt.hash(data.newPassword, SALT_ROUNDS);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                passwordHash: newPasswordHash,
+            },
+        });
     }
 }
 

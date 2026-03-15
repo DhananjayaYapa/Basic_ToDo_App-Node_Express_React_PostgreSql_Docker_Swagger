@@ -3,6 +3,7 @@ import type {
   LoginRequestDto,
   LoginResponseDto,
   RegisterRequestDto,
+  ChangePasswordRequestDto,
   User,
   ApiResponseDto,
 } from '../utilities/models'
@@ -24,8 +25,8 @@ const updateProfile = (data: { name: string; email: string }) => {
   return axiosPrivateInstance.put<ApiResponseDto<User>>(API_ROUTES.PROFILE, data)
 }
 
-const changePassword = (data: { currentPassword: string; newPassword: string }) => {
-  return axiosPrivateInstance.put(API_ROUTES.CHANGE_PASSWORD, data)
+const changePassword = (data: ChangePasswordRequestDto) => {
+  return axiosPrivateInstance.put<ApiResponseDto<null>>(API_ROUTES.CHANGE_PASSWORD, data)
 }
 
 // Set token in localStorage

@@ -8,16 +8,20 @@ export const createTaskSchema = z.object({
         .min(1, 'Title is required')
         .max(255, 'Title must be at most 255 characters'),
     description: z
-        .string()
-        .max(5000, 'Description must be at most 5000 characters')
-        .optional()
-        .nullable(),
+        .string({ required_error: 'Description is required' })
+        .trim()
+        .min(1, 'Description is required')
+        .max(5000, 'Description must be at most 5000 characters'),
 });
 
 //Update Task Schema
 export const updateTaskSchema = z.object({
     title: z.string().trim().min(1).max(255).optional(),
-    description: z.string().max(5000).optional().nullable(),
+    description: z
+        .string({ required_error: 'Description is required' })
+        .trim()
+        .min(1, 'Description is required')
+        .max(5000, 'Description must be at most 5000 characters'),
 });
 
 //Task Query Schema (filtering + sorting + pagination)

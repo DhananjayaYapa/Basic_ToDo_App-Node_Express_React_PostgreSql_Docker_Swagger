@@ -58,7 +58,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
         />
         <TextField
           fullWidth
-          label="Description (optional)"
+          label="Description"
           value={formData.description.value}
           onChange={(e) => onInputChange('description', e.target.value)}
           onFocus={() => onInputFocus('description')}
@@ -66,6 +66,7 @@ const CreateTaskForm: React.FC<CreateTaskFormProps> = ({
           helperText={
             isShowHelperText && formData.description.error ? formData.description.error : ''
           }
+          required={formData.description.isRequired}
           disabled={formData.description.disable || isPending}
           margin="normal"
           size="small"

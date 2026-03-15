@@ -12,7 +12,7 @@ const mockPrisma = {
     },
 };
 
-jest.unstable_mockModule('../../config/db.js', () => ({
+jest.unstable_mockModule('../../../src/config/db.js', () => ({
     default: mockPrisma,
 }));
 
@@ -27,12 +27,12 @@ jest.unstable_mockModule('bcryptjs', () => ({
 }));
 
 // Mock auth middleware
-jest.unstable_mockModule('../../middleware/auth.js', () => ({
+jest.unstable_mockModule('../../../src/middleware/auth.js', () => ({
     generateToken: jest.fn().mockReturnValue('mock-jwt-token'),
 }));
 
 // Import after mocks
-const { default: AuthService } = await import('./auth.service.js');
+const { default: AuthService } = await import('../../../src/modules/auth/auth.service.js');
 
 describe('AuthService', () => {
     beforeEach(() => {
@@ -156,6 +156,56 @@ describe('AuthService', () => {
             mockPrisma.user.findUnique.mockResolvedValue(null);
 
             await expect(AuthService.updateProfile(999, { name: 'Test' })).rejects.toThrow('User not found');
+        });
+    });
+
+    describe('changePassword', () => {
+        it('should change password when current password is valid', async () => {
+            mockPrisma.user.findUnique.mockResolvedValue({
+                id: 1,
+                passwordHash: 'old-hash',
+            });
+            mockBcrypt.compare.mockResolvedValue(true);
+            mockBcrypt.hash.mockResolvedValue('new-hash');
+            mockPrisma.user.update.mockResolvedValue({ id: 1 });
+
+            await AuthService.changePassword(1, {
+                currentPassword: 'OldPassword123',
+                newPassword: 'NewPassword123',
+            });
+
+            expect(mockBcrypt.compare).toHaveBeenCalledWith('OldPassword123', 'old-hash');
+            expect(mockBcrypt.hash).toHaveBeenCalledWith('NewPassword123', 10);
+            expect(mockPrisma.user.update).toHaveBeenCalledWith({
+                where: { id: 1 },
+                data: { passwordHash: 'new-hash' },
+            });
+        });
+
+        it('should throw UnauthorizedError when current password is invalid', async () => {
+            mockPrisma.user.findUnique.mockResolvedValue({
+                id: 1,
+                passwordHash: 'old-hash',
+            });
+            mockBcrypt.compare.mockResolvedValue(false);
+
+            await expect(
+                AuthService.changePassword(1, {
+                    currentPassword: 'WrongPassword123',
+                    newPassword: 'NewPassword123',
+                }),
+            ).rejects.toThrow('Current password is incorrect');
+        });
+
+        it('should throw NotFoundError when user does not exist', async () => {
+            mockPrisma.user.findUnique.mockResolvedValue(null);
+
+            await expect(
+                AuthService.changePassword(999, {
+                    currentPassword: 'OldPassword123',
+                    newPassword: 'NewPassword123',
+                }),
+            ).rejects.toThrow('User not found');
         });
     });
 });

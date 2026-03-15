@@ -12,9 +12,7 @@ import {
 import { useAllTasks, useUpdateTask, useDeleteTask, useMarkDone } from '../../hooks/useTasks'
 import { PageHeader, LoadingOverlay } from '../../components/shared'
 import { TaskFilters, TaskTable, TaskEditDialog } from '../../components/todos'
-import {
-  INITIAL_EDIT_TASK_FORM_STATE,
-} from '../../utilities/models'
+import { INITIAL_EDIT_TASK_FORM_STATE } from '../../utilities/models'
 import type { Task, TaskQuery, EditTaskFormDto } from '../../utilities/models'
 import { validateControlledFormData } from '../../utilities/helpers'
 
@@ -107,7 +105,7 @@ const ManageTodos: React.FC = () => {
         id: selectedTask.id,
         data: {
           title: editFormData.title.value.trim(),
-          description: editFormData.description.value.trim() || null,
+          description: editFormData.description.value.trim(),
         },
       })
       setEditDialogOpen(false)

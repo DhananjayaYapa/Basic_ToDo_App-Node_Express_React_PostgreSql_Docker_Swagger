@@ -20,25 +20,33 @@ export const registerSchema = z.object({
 
 //Login Schema
 export const loginSchema = z.object({
-    email: z
-        .string({ required_error: 'Email is required' })
-        .trim()
-        .email('Invalid email address'),
-    password: z
-        .string({ required_error: 'Password is required' })
-        .min(1, 'Password is required'),
+    email: z.string({ required_error: 'Email is required' }).trim().email('Invalid email address'),
+    password: z.string({ required_error: 'Password is required' }).min(1, 'Password is required'),
 });
 
 //Update Profile Schema
 export const updateProfileSchema = z.object({
-    name: z
-        .string()
-        .trim()
-        .min(1, 'Name cannot be empty')
-        .max(100, 'Name must be at most 100 characters'),
+    name: z.string().trim().min(1, 'Name cannot be empty').max(100, 'Name must be at most 100 characters'),
 });
+
+//Change Password Schema
+export const changePasswordSchema = z
+    .object({
+        currentPassword: z
+            .string({ required_error: 'Current password is required' })
+            .min(1, 'Current password is required'),
+        newPassword: z
+            .string({ required_error: 'New password is required' })
+            .min(6, 'New password must be at least 6 characters')
+            .max(128, 'New password must be at most 128 characters'),
+    })
+    .refine((data) => data.currentPassword !== data.newPassword, {
+        message: 'New password must be different from current password',
+        path: ['newPassword'],
+    });
 
 //Inferred Types
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

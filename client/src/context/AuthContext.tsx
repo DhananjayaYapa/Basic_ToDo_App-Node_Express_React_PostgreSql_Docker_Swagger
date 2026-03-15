@@ -5,6 +5,7 @@ import type {
   LoginRequestDto,
   RegisterRequestDto,
   UpdateProfileRequestDto,
+  ChangePasswordRequestDto,
 } from '../utilities/models'
 import { TOKEN_KEY } from '../utilities/constants'
 
@@ -19,7 +20,7 @@ interface AuthContextType {
   register: (data: RegisterRequestDto) => Promise<void>
   logout: () => void
   updateProfile: (data: UpdateProfileRequestDto) => Promise<void>
-  changePassword: (data: { currentPassword: string; newPassword: string }) => Promise<void>
+  changePassword: (data: ChangePasswordRequestDto) => Promise<void>
   fetchProfile: () => Promise<void>
 }
 
@@ -100,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   // Change Password
-  const changePassword = async (data: { currentPassword: string; newPassword: string }) => {
+  const changePassword = async (data: ChangePasswordRequestDto) => {
     setIsLoading(true)
     try {
       await authService.changePassword(data)
