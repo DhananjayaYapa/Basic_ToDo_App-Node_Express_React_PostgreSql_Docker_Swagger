@@ -3,7 +3,7 @@ import TaskController from './task.controller.js';
 import { authenticate } from '../../middleware/auth.js';
 import { validate } from '../../middleware/validate.js';
 import { asyncHandler } from '../../middleware/errorHandler.js';
-import { createTaskSchema, updateTaskSchema, taskQuerySchema } from './task.schema.js';
+import { createTaskSchema, updateTaskSchema, taskQuerySchema, taskParamsSchema } from './task.schema.js';
 
 const router = express.Router();
 
@@ -210,7 +210,7 @@ router.get(
  *       404:
  *         description: Task not found
  */
-router.get('/:id', asyncHandler(TaskController.getById));
+router.get('/:id', validate({ params: taskParamsSchema }), asyncHandler(TaskController.getById));
 
 /**
  * @swagger
@@ -245,7 +245,7 @@ router.get('/:id', asyncHandler(TaskController.getById));
  */
 router.put(
     '/:id',
-    validate({ body: updateTaskSchema }),
+    validate({ params: taskParamsSchema, body: updateTaskSchema }),
     asyncHandler(TaskController.update),
 );
 
@@ -269,7 +269,7 @@ router.put(
  *       404:
  *         description: Task not found
  */
-router.patch('/:id/done', asyncHandler(TaskController.markDone));
+router.patch('/:id/done', validate({ params: taskParamsSchema }), asyncHandler(TaskController.markDone));
 
 /**
  * @swagger
@@ -291,6 +291,6 @@ router.patch('/:id/done', asyncHandler(TaskController.markDone));
  *       404:
  *         description: Task not found
  */
-router.delete('/:id', asyncHandler(TaskController.delete));
+router.delete('/:id', validate({ params: taskParamsSchema }), asyncHandler(TaskController.delete));
 
 export default router;
