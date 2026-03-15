@@ -137,6 +137,46 @@ Create, manage, complete, filter, and export tasks through a responsive dashboar
 - Node.js 18+ recommended
 - PostgreSQL running locally or remotely
 - npm
+- Docker and Docker Compose for containerized evaluation
+
+### Docker Run
+
+This project now supports the assessment requirement of running all parts through Docker using 3 containers:
+
+- `db` for PostgreSQL
+- `server` for the Express + Prisma API
+- `client` for the React production build served by Nginx
+
+Run the full application with:
+
+```bash
+docker compose up --build
+```
+
+Available URLs after startup:
+
+- App: `http://localhost:8080`
+- API: `http://localhost:5000/api/v1`
+- Swagger: `http://localhost:5000/api-docs`
+- Swagger through client proxy: `http://localhost:8080/api-docs`
+
+To stop everything:
+
+```bash
+docker compose down
+```
+
+To stop and remove the PostgreSQL volume too:
+
+```bash
+docker compose down -v
+```
+
+Notes for Docker mode:
+
+- The server container runs Prisma migrations on startup using `prisma migrate deploy`.
+- The client container builds the Vite app inside Docker and serves the production build with Nginx.
+- The Nginx container proxies `/api` requests to the backend container, so the frontend can use `/api/v1` without hardcoding localhost.
 
 ### 1. Clone the repository
 
