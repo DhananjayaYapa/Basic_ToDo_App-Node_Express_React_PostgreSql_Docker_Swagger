@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-} from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material'
 import type { EditTaskFormDto } from '../../../utilities/models'
 
 interface TaskEditDialogProps {
@@ -63,6 +56,7 @@ const TaskEditDialog: React.FC<TaskEditDialogProps> = ({
             helperText={
               isShowHelperText && formData.description.error ? formData.description.error : ''
             }
+            required={formData.description.isRequired}
             disabled={formData.description.disable || isPending}
             margin="normal"
             size="small"

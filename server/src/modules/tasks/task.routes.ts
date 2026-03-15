@@ -43,11 +43,7 @@ router.use(authenticate);
  *             schema:
  *               type: string
  */
-router.get(
-    '/export/csv',
-    validate({ query: taskQuerySchema }),
-    asyncHandler(TaskController.exportCSV),
-);
+router.get('/export/csv', validate({ query: taskQuerySchema }), asyncHandler(TaskController.exportCSV));
 
 /**
  * @swagger
@@ -77,11 +73,7 @@ router.get(
  *       200:
  *         description: JSON export file
  */
-router.get(
-    '/export/json',
-    validate({ query: taskQuerySchema }),
-    asyncHandler(TaskController.exportJSON),
-);
+router.get('/export/json', validate({ query: taskQuerySchema }), asyncHandler(TaskController.exportJSON));
 
 //Recent Tasks Route
 /**
@@ -113,7 +105,7 @@ router.get('/recent', asyncHandler(TaskController.getRecent));
  *         application/json:
  *           schema:
  *             type: object
- *             required: [title]
+ *             required: [title, description]
  *             properties:
  *               title:
  *                 type: string
@@ -127,11 +119,7 @@ router.get('/recent', asyncHandler(TaskController.getRecent));
  *       400:
  *         description: Validation error
  */
-router.post(
-    '/',
-    validate({ body: createTaskSchema }),
-    asyncHandler(TaskController.create),
-);
+router.post('/', validate({ body: createTaskSchema }), asyncHandler(TaskController.create));
 
 /**
  * @swagger
@@ -184,11 +172,7 @@ router.post(
  *       200:
  *         description: Tasks retrieved with pagination
  */
-router.get(
-    '/',
-    validate({ query: taskQuerySchema }),
-    asyncHandler(TaskController.getAll),
-);
+router.get('/', validate({ query: taskQuerySchema }), asyncHandler(TaskController.getAll));
 
 /**
  * @swagger
@@ -232,6 +216,7 @@ router.get('/:id', asyncHandler(TaskController.getById));
  *         application/json:
  *           schema:
  *             type: object
+ *             required: [description]
  *             properties:
  *               title:
  *                 type: string
@@ -243,11 +228,7 @@ router.get('/:id', asyncHandler(TaskController.getById));
  *       404:
  *         description: Task not found
  */
-router.put(
-    '/:id',
-    validate({ body: updateTaskSchema }),
-    asyncHandler(TaskController.update),
-);
+router.put('/:id', validate({ body: updateTaskSchema }), asyncHandler(TaskController.update));
 
 /**
  * @swagger

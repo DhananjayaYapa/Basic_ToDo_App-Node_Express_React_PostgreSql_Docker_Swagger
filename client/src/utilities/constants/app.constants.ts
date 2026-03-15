@@ -1,5 +1,5 @@
 // Application Name
-export const APP_NAME = 'Todo App'
+export const APP_NAME = 'Todo TrackX'
 
 // Token storage keys
 export const TOKEN_KEY = 'todo_token'

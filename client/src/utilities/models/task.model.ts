@@ -14,12 +14,12 @@ export interface Task {
 
 export interface CreateTaskInput {
   title: string
-  description?: string | null
+  description: string
 }
 
 export interface UpdateTaskInput {
   title?: string
-  description?: string | null
+  description: string
 }
 
 // ─── Task Query ──────────────────────────────────────────────────────────────
@@ -162,7 +162,7 @@ export const INITIAL_CREATE_TASK_FORM_STATE = (): CreateTaskFormDto => ({
   description: {
     value: '',
     validator: 'text',
-    isRequired: false,
+    isRequired: true,
     error: null,
     disable: false,
   },
@@ -182,7 +182,7 @@ export const INITIAL_EDIT_TASK_FORM_STATE = (
   description: {
     value: description,
     validator: 'text',
-    isRequired: false,
+    isRequired: true,
     error: null,
     disable: false,
   },

@@ -8,7 +8,7 @@ import {
   TrendingUp as RateIcon,
 } from '@mui/icons-material'
 import { useAuth } from '../../hooks/useAuth'
-import { useRecentTasks, useCreateTask } from '../../hooks/useTasks'
+import { useRecentTasks, useCreateTask, useMarkDone } from '../../hooks/useTasks'
 import { useDashboardSummary, useTasksByDay, useStatusBreakdown } from '../../hooks/useDashboard'
 import { LoadingOverlay } from '../../components/shared'
 import {
@@ -19,9 +19,7 @@ import {
   TasksByDayChart,
   StatusPieChart,
 } from '../../components/dashboard'
-import {
-  INITIAL_CREATE_TASK_FORM_STATE,
-} from '../../utilities/models'
+import { INITIAL_CREATE_TASK_FORM_STATE } from '../../utilities/models'
 import type { CreateTaskFormDto, Task } from '../../utilities/models'
 import { validateControlledFormData } from '../../utilities/helpers'
 import styles from './Dashboard.module.scss'
@@ -36,12 +34,14 @@ const Dashboard: React.FC = () => {
   const { data: tasksByDay, isLoading: chartLoading } = useTasksByDay({ days: 30 })
   const { data: statusBreakdown } = useStatusBreakdown()
   const createTaskMutation = useCreateTask()
+  const markDoneMutation = useMarkDone()
 
   // ─── Controlled Form State ────────────────────────────────────────────────
   const [formData, setFormData] = useState<CreateTaskFormDto>(INITIAL_CREATE_TASK_FORM_STATE())
   const [isShowHelperText, setIsShowHelperText] = useState(false)
   const [formError, setFormError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const [markingDoneTaskId, setMarkingDoneTaskId] = useState<number | null>(null)
 
   const isLoading = summaryLoading || recentLoading || chartLoading
 
@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
     try {
       await createTaskMutation.mutateAsync({
         title: formData.title.value.trim(),
-        description: formData.description.value.trim() || null,
+        description: formData.description.value.trim(),
       })
       setFormData(INITIAL_CREATE_TASK_FORM_STATE())
       setIsShowHelperText(false)
@@ -88,6 +88,17 @@ const Dashboard: React.FC = () => {
       setTimeout(() => setSuccessMsg(''), 3000)
     } catch {
       setFormError('Failed to create task')
+    }
+  }
+
+  const handleMarkDone = async (taskId: number) => {
+    setMarkingDoneTaskId(taskId)
+    try {
+      await markDoneMutation.mutateAsync(taskId)
+    } catch {
+      setFormError('Failed to mark task as done')
+    } finally {
+      setMarkingDoneTaskId(null)
     }
   }
 
@@ -140,7 +151,11 @@ const Dashboard: React.FC = () => {
             />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
-            <RecentTaskCards tasks={(recentTasks as Task[]) || []} />
+            <RecentTaskCards
+              tasks={(recentTasks as Task[]) || []}
+              markingDoneTaskId={markingDoneTaskId}
+              onMarkDone={handleMarkDone}
+            />
           </Grid>
         </Grid>
 

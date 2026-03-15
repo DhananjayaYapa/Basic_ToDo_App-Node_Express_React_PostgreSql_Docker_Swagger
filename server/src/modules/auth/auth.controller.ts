@@ -39,6 +39,15 @@ class AuthController {
             next(error);
         }
     }
+
+    static async changePassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            await AuthService.changePassword(req.user!.userId, req.body);
+            successResponse(res, null, 'Password changed successfully');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export default AuthController;

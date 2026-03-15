@@ -3,7 +3,7 @@ import AuthController from './auth.controller.js';
 import { authenticate } from '../../middleware/auth.js';
 import { validate } from '../../middleware/validate.js';
 import { asyncHandler } from '../../middleware/errorHandler.js';
-import { registerSchema, loginSchema, updateProfileSchema } from './auth.schema.js';
+import { registerSchema, loginSchema, updateProfileSchema, changePasswordSchema } from './auth.schema.js';
 
 const router = express.Router();
 
@@ -42,11 +42,7 @@ const router = express.Router();
  *       409:
  *         description: Email already registered
  */
-router.post(
-    '/register',
-    validate({ body: registerSchema }),
-    asyncHandler(AuthController.register),
-);
+router.post('/register', validate({ body: registerSchema }), asyncHandler(AuthController.register));
 
 /**
  * @swagger
@@ -75,11 +71,7 @@ router.post(
  *       401:
  *         description: Invalid credentials
  */
-router.post(
-    '/login',
-    validate({ body: loginSchema }),
-    asyncHandler(AuthController.login),
-);
+router.post('/login', validate({ body: loginSchema }), asyncHandler(AuthController.login));
 
 //Protected Routes
 router.use(authenticate);
@@ -125,10 +117,41 @@ router.get('/profile', asyncHandler(AuthController.getProfile));
  *       401:
  *         description: Unauthorized
  */
+router.put('/profile', validate({ body: updateProfileSchema }), asyncHandler(AuthController.updateProfile));
+
+/**
+ * @swagger
+ * /api/v1/auth/change-password:
+ *   put:
+ *     summary: Change current user password
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [currentPassword, newPassword]
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 example: OldPassword123
+ *               newPassword:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: NewPassword123
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       401:
+ *         description: Current password is incorrect
+ */
 router.put(
-    '/profile',
-    validate({ body: updateProfileSchema }),
-    asyncHandler(AuthController.updateProfile),
+    '/change-password',
+    validate({ body: changePasswordSchema }),
+    asyncHandler(AuthController.changePassword),
 );
 
 export default router;
