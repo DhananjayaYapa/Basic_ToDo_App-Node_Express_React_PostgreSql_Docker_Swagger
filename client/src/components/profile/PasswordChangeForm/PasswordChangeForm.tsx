@@ -44,7 +44,11 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
                   onChange={(e) => onInputChange('currentPassword', e.target.value)}
                   onFocus={() => onInputFocus('currentPassword')}
                   error={isShowHelperText && !!formData.currentPassword.error}
-                  helperText={isShowHelperText && formData.currentPassword.error ? formData.currentPassword.error : ''}
+                  helperText={
+                    isShowHelperText && formData.currentPassword.error
+                      ? formData.currentPassword.error
+                      : ''
+                  }
                   required={formData.currentPassword.isRequired}
                   disabled={formData.currentPassword.disable}
                 />
@@ -58,7 +62,9 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
                   onChange={(e) => onInputChange('newPassword', e.target.value)}
                   onFocus={() => onInputFocus('newPassword')}
                   error={isShowHelperText && !!formData.newPassword.error}
-                  helperText={isShowHelperText && formData.newPassword.error ? formData.newPassword.error : ''}
+                  helperText={
+                    isShowHelperText && formData.newPassword.error ? formData.newPassword.error : ''
+                  }
                   required={formData.newPassword.isRequired}
                   disabled={formData.newPassword.disable}
                 />
@@ -72,7 +78,11 @@ const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
                   onChange={(e) => onInputChange('confirmPassword', e.target.value)}
                   onFocus={() => onInputFocus('confirmPassword')}
                   error={isShowHelperText && !!formData.confirmPassword.error}
-                  helperText={isShowHelperText && formData.confirmPassword.error ? formData.confirmPassword.error : ''}
+                  helperText={
+                    isShowHelperText && formData.confirmPassword.error
+                      ? formData.confirmPassword.error
+                      : ''
+                  }
                   required={formData.confirmPassword.isRequired}
                   disabled={formData.confirmPassword.disable}
                 />
