@@ -1,0 +1,57 @@
+generator client {
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+// ─── User Model ──────────────────────────────────────────────────────────────
+
+model User {
+    id           Int      @id @default(autoincrement())
+    name         String   @db.VarChar(100)
+    email        String   @unique @db.VarChar(255)
+    passwordHash String   @map("password_hash") @db.VarChar(255)
+    createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+    tasks Task[]
+
+    @@map("users")
+}
+
+// ─── Task Model (Optimized with Normalization & Indexing) ────────────────────
+
+model Task {
+    id          Int        @id @default(autoincrement())
+    title       String     @db.VarChar(255)
+    description String?    @db.Text
+    status      TaskStatus @default(PENDING)
+    completedAt DateTime?  @map("completed_at") @db.Timestamptz()
+    userId      Int        @map("user_id")
+    createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz()
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    // ── Indexes for Query Optimization ───────────────────────────────────────
+    // Primary query: get recent pending tasks for a user
+    @@index([userId, status], name: "idx_task_user_status")
+    // Sort by newest created for "recent 5" query
+    @@index([userId, createdAt], name: "idx_task_user_created")
+    // Dashboard queries on completion dates
+    @@index([userId, completedAt], name: "idx_task_user_completed")
+
+    @@map("task")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum TaskStatus {
+    PENDING
+    COMPLETED
+}
+
+
