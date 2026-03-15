@@ -31,7 +31,13 @@ export const taskQuerySchema = z.object({
     limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
+//Task Params Schema (id validation)
+export const taskParamsSchema = z.object({
+    id: z.coerce.number().int().positive('id must be a positive integer'),
+});
+
 //Inferred Types
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type TaskQueryInput = z.infer<typeof taskQuerySchema>;
+export type TaskParamsInput = z.infer<typeof taskParamsSchema>;
