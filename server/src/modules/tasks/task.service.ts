@@ -11,7 +11,7 @@ class TaskService {
         return prisma.task.create({
             data: {
                 title: data.title,
-                description: data.description || null,
+                description: data.description,
                 userId,
             },
         });

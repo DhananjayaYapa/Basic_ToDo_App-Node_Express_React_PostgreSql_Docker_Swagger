@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
     try {
       await createTaskMutation.mutateAsync({
         title: formData.title.value.trim(),
-        description: formData.description.value.trim() || null,
+        description: formData.description.value.trim(),
       })
       setFormData(INITIAL_CREATE_TASK_FORM_STATE())
       setIsShowHelperText(false)
