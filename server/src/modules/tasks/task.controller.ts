@@ -3,6 +3,16 @@ import TaskService from './task.service.js';
 import { successResponse, createdResponse } from '../../shared/utils/responseHelper.js';
 import { exportTasksToCSV, exportTasksToJSON, getExportFilename } from '../../shared/utils/exportHelper.js';
 
+class ValidationError extends Error {
+    statusCode: number;
+
+    constructor(message: string) {
+        super(message);
+        this.name = 'ValidationError';
+        this.statusCode = 400;
+    }
+}
+
 //Task Controller
 class TaskController {
     static async create(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -36,7 +46,7 @@ class TaskController {
         try {
             const id = parseInt(req.params.id, 10);
             if (isNaN(id)) {
-                return next(new Error('Invalid task ID'));
+                return next(new ValidationError('Invalid task ID'));
             }
             const task = await TaskService.getById(req.user!.userId, id);
             successResponse(res, task, 'Task retrieved successfully');
