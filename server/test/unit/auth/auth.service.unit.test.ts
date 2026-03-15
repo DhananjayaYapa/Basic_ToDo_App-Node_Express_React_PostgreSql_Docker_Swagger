@@ -12,7 +12,7 @@ const mockPrisma = {
     },
 };
 
-jest.unstable_mockModule('../../config/db.js', () => ({
+jest.unstable_mockModule('../../../src/config/db.js', () => ({
     default: mockPrisma,
 }));
 
@@ -27,12 +27,12 @@ jest.unstable_mockModule('bcryptjs', () => ({
 }));
 
 // Mock auth middleware
-jest.unstable_mockModule('../../middleware/auth.js', () => ({
+jest.unstable_mockModule('../../../src/middleware/auth.js', () => ({
     generateToken: jest.fn().mockReturnValue('mock-jwt-token'),
 }));
 
 // Import after mocks
-const { default: AuthService } = await import('./auth.service.js');
+const { default: AuthService } = await import('../../../src/modules/auth/auth.service.js');
 
 describe('AuthService', () => {
     beforeEach(() => {
