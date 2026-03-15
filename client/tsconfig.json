@@ -21,6 +21,7 @@
     "noUncheckedSideEffectImports": true,
     /* Paths */
     "baseUrl": ".",
+    "types": ["vitest/globals"],
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
@@ -30,5 +31,5 @@
       "@utilities/*": ["src/utilities/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "test", "vite.config.ts"]
 }

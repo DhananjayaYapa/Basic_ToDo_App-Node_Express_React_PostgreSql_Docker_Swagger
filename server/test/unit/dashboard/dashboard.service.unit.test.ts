@@ -11,11 +11,11 @@ const mockPrisma = {
     },
 };
 
-jest.unstable_mockModule('../../config/db.js', () => ({
+jest.unstable_mockModule('../../../src/config/db.js', () => ({
     default: mockPrisma,
 }));
 
-const { default: DashboardService } = await import('./dashboard.service.js');
+const { default: DashboardService } = await import('../../../src/modules/dashboard/dashboard.service.js');
 
 describe('DashboardService', () => {
     beforeEach(() => {

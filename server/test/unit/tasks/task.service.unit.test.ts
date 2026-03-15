@@ -15,11 +15,11 @@ const mockPrisma = {
     },
 };
 
-jest.unstable_mockModule('../../config/db.js', () => ({
+jest.unstable_mockModule('../../../src/config/db.js', () => ({
     default: mockPrisma,
 }));
 
-const { default: TaskService } = await import('./task.service.js');
+const { default: TaskService } = await import('../../../src/modules/tasks/task.service.js');
 
 describe('TaskService', () => {
     beforeEach(() => {

@@ -1,0 +1,78 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run-client-tests-json",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"client",
+				"run",
+				"test",
+				"--",
+				"--reporter",
+				"json",
+				"--outputFile",
+				"vitest-full.json"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "echo-test",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"hello"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "client-test-recheck",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"client",
+				"run",
+				"test",
+				"--",
+				"test/unit/components/todos.components.unit.test.tsx",
+				"test/unit/components/dashboard.components.unit.test.tsx",
+				"test/unit/components/profile.components.unit.test.tsx",
+				"test/unit/components/templates.components.unit.test.tsx",
+				"test/integration/pages/dashboard.integration.test.tsx",
+				"test/integration/pages/manage-todos.integration.test.tsx",
+				"test/integration/app/bootstrap-index.integration.test.tsx",
+				"test/integration/services/auth.service.integration.test.ts",
+				"test/integration/services/task.service.integration.test.ts",
+				"test/integration/services/dashboard.service.integration.test.ts",
+				"test/integration/context/auth-context.integration.test.tsx",
+				"test/integration/hooks/use-export.integration.test.tsx",
+				"test/integration/hooks/use-tasks.integration.test.tsx"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "client-test-json-subset",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"--prefix",
+				"client",
+				"run",
+				"test",
+				"--",
+				"test/unit/components/profile.components.unit.test.tsx",
+				"test/unit/components/dashboard.components.unit.test.tsx",
+				"test/integration/pages/dashboard.integration.test.tsx",
+				"test/integration/app/bootstrap-index.integration.test.tsx",
+				"--reporter",
+				"json",
+				"--outputFile",
+				"vitest-failures.json"
+			],
+			"isBackground": false
+		}
+	]
+}
