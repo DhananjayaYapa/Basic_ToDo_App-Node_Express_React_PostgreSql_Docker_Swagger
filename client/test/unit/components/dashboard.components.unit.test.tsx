@@ -66,9 +66,11 @@ describe('dashboard components unit', () => {
   })
 
   it('renders recent tasks and no-data state', () => {
+    const onMarkDone = vi.fn()
+
     const { rerender } = render(
       <MemoryRouter>
-        <RecentTaskCards tasks={mockTaskList} />
+        <RecentTaskCards tasks={mockTaskList} markingDoneTaskId={null} onMarkDone={onMarkDone} />
       </MemoryRouter>
     )
 
@@ -77,7 +79,7 @@ describe('dashboard components unit', () => {
 
     rerender(
       <MemoryRouter>
-        <RecentTaskCards tasks={[]} />
+        <RecentTaskCards tasks={[]} markingDoneTaskId={null} onMarkDone={onMarkDone} />
       </MemoryRouter>
     )
 

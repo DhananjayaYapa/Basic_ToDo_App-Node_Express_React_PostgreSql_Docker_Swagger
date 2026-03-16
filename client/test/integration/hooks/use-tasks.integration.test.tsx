@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import React from 'react'
+import type { ReactNode } from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
@@ -33,7 +33,7 @@ vi.mock('../../../src/services/task.service', () => ({
   },
 }))
 
-const wrapper = ({ children }: { children: React.ReactNode }) => {
+const wrapper = ({ children }: { children: ReactNode }) => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   })
@@ -54,8 +54,11 @@ describe('useTasks hooks integration', () => {
       expect(list.result.current.isSuccess).toBe(true)
     })
 
-    await create.result.current.mutateAsync({ title: 'Task A' })
-    await update.result.current.mutateAsync({ id: 1, data: { title: 'Task B' } })
+    await create.result.current.mutateAsync({ title: 'Task A', description: 'Task A details' })
+    await update.result.current.mutateAsync({
+      id: 1,
+      data: { title: 'Task B', description: 'Task B details' },
+    })
     await remove.result.current.mutateAsync(1)
     await done.result.current.mutateAsync(1)
 
