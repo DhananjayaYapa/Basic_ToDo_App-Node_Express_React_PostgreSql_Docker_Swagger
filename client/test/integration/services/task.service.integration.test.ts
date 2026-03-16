@@ -40,8 +40,8 @@ describe('taskService integration', () => {
     const all = await taskService.getAllTasks({ page: 1, limit: 10, status: 'PENDING' })
     expect(all.pagination.total).toBe(0)
 
-    await taskService.createTask({ title: 'X' })
-    await taskService.updateTask(1, { title: 'Y' })
+    await taskService.createTask({ title: 'X', description: 'X details' })
+    await taskService.updateTask(1, { title: 'Y', description: 'Y details' })
     await taskService.deleteTask(1)
     await taskService.markDone(1)
 
